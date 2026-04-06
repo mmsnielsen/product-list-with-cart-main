@@ -12,6 +12,7 @@ html {
 .page-wrapper {
   background-color: hsl(20, 50%, 98%);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
   min-height: 100vh;
   padding: 4rem 4rem;
 }
@@ -19,6 +20,8 @@ html {
 .container {
   display: flex;
   flex-direction: row;
+  font-family: "Red Hat Text", sans-serif;
+
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -26,6 +29,11 @@ html {
 
 .product-list {
   flex: 3;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 600;
 }
 
 .cart-container {
