@@ -15,32 +15,67 @@
     <title>Frontend Mentor | Product list with cart</title>
   </head>
   <body>
-    <main class="container">
-      <section class="product-list">
-        <h1>Desserts</h1>
-        <div class="product-grid" id="product-grid">
-          Waffle with Berries Waffle 6.50 Add to Cart Vanilla Bean Crème Brûlée
-          Crème Brûlée 7.00 Add to Cart Macaron Mix of Five Macaron 8.00 Add to
-          Cart Classic Tiramisu Tiramisu 5.50 Add to Cart Pistachio Baklava
-          Baklava 4.00 Add to Cart Lemon Meringue Pie Pie 5.00 Add to Cart Red
-          Velvet Cake Cake 4.50 Add to Cart Salted Caramel Brownie Brownie 4.50
-          Add to Cart Vanilla Panna Cotta Panna Cotta 6.50
-        </div>
-      </section>
-      <aside class="cart-container">
-        <div class="cart-content">
-          <h2>Your Cart (0)</h2>
-          <div class="cart-empty" id="cart-empty">
-            <img
-              src="./assets/images/illustration-empty-cart.svg"
-              alt="Empty Cart"
-            />
-            <p>Your added items will appear here</p>
+    <div class="page-wrapper">
+      <main class="container">
+        <section class="product-list">
+          <h1>Desserts</h1>
+          <div class="product-grid" id="product-grid">
+            <div class="product-card">
+              <div class="image-container">
+                <img
+                  src="./assets/images/image-waffle-desktop.jpg"
+                  alt="Waffle with Berries"
+                  class="product-image"
+                />
+
+                <!-- Button Container -->
+                <div class="button-container">
+                  <button class="add-to-cart-btn">
+                    <img src="./assets/images/icon-add-to-cart.svg" alt="" />
+                    Add to Cart
+                  </button>
+
+                  <!-- This quantity-selector will be hidden initially -->
+                  <div class="quantity-selector" style="display: none">
+                    <button class="decrement-btn">
+                      <img
+                        src="./assets/images/icon-decrement-quantity.svg"
+                        alt="Decrease"
+                      />
+                    </button>
+                    <span class="quantity">1</span>
+                    <button class="increment-btn">
+                      <img
+                        src="./assets/images/icon-increment-quantity.svg"
+                        alt="Increase"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="product-info">
+                <p class="category">Waffle</p>
+                <h3 class="name">Waffle with Berries</h3>
+                <p class="price">$6.50</p>
+              </div>
+            </div>
           </div>
-          <div class="cart-items" id="cart-items" style="display: none"></div>
-        </div>
-      </aside>
-    </main>
+        </section>
+        <aside class="cart-container">
+          <div class="cart-content">
+            <h2>Your Cart (0)</h2>
+            <div class="cart-empty" id="cart-empty">
+              <img
+                src="./assets/images/illustration-empty-cart.svg"
+                alt="Empty Cart"
+              />
+              <p>Your added items will appear here</p>
+            </div>
+            <div class="cart-items" id="cart-items" style="display: none"></div>
+          </div>
+        </aside>
+      </main>
+    </div>
     <script src="src/index.js"></script>
   </body>
 </html>
