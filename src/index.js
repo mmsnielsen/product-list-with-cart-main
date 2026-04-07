@@ -1,9 +1,11 @@
+let cart = [];
+let allDesserts = [];
+
 async function getDesserts() {
   try {
     const response = await fetch("./data.json");
-    const data = await response.json();
-
-    displayDesserts(data);
+    allDesserts = await response.json();
+    displayDesserts(allDesserts);
   } catch (error) {
     console.error("Error fetching dessert data:", error);
   }
@@ -21,7 +23,7 @@ function displayDesserts(desserts) {
 
       
       <div class="button-container">
-        <button class="add-to-cart-btn">
+        <button class="add-to-cart-btn" data-name="${dessert.name}" data-price="${dessert.price}">
           <img src="./assets/images/icon-add-to-cart.svg" alt="Add to Cart">Add to Cart
         </button>
 
@@ -42,6 +44,25 @@ function displayDesserts(desserts) {
   `;
     productGrid.innerHTML += cardHTML;
   });
+}
+
+const productGrid = document.getElementById("product-grid");
+
+productGrid.addEventListener("click", (event) => {
+  const addToCartBtn = event.target.closest(".add-to-cart-btn");
+
+  if (addToCartBtn) {
+    const productName = addToCartBtn.dataset.name;
+    const productPrice = parseFloat(addToCartBtn.dataset.price);
+    addToCart(productName, productPrice);
+  }
+});
+
+function addToCart(productName, productPrice) {
+  const product = allDesserts.find((dessert) => dessert.name === productName);
+  cart.push({ ...product, quantity: 1 });
+  console.log("Cart Updated:", cart);
+  alert(`${productName} ${productPrice.toFixed(2)} added to cart!`);
 }
 
 getDesserts();
