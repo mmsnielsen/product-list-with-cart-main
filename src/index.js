@@ -58,11 +58,26 @@ productGrid.addEventListener("click", (event) => {
   }
 });
 
-function addToCart(productName, productPrice) {
+function addToCart(productName) {
   const product = allDesserts.find((dessert) => dessert.name === productName);
-  cart.push({ ...product, quantity: 1 });
-  console.log("Cart Updated:", cart);
-  alert(`${productName} ${productPrice.toFixed(2)} added to cart!`);
+  if (!cart.find((item) => item.name === productName)) {
+    cart.push({ ...product, quantity: 1 });
+    updateButtonState(productName);
+    renderCart();
+  }
+}
+
+function updateButtonState(productName) {
+  const cards = document.querySelectorAll(".product-card");
+  cards.forEach((card) => {
+    const name = card.querySelector(".name").innerText;
+    if (name === productName) {
+      card.querySelector(".add-to-cart-btn").style.display = "none";
+      card.querySelector(".quantity-selector").style.display = "flex";
+      card.querySelector(".product-image").style.border =
+        "2px solid hsl(14, 86%, 42%)";
+    }
+  });
 }
 
 getDesserts();
