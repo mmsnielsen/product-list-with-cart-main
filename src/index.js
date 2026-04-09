@@ -13,124 +13,106 @@ async function getDesserts() {
 
 function displayDesserts(desserts) {
   const productGrid = document.getElementById("product-grid");
-
   productGrid.innerHTML = "";
 
   desserts.forEach((dessert) => {
-    const cardHTML = ` <div class="product-card">
+    productGrid.innerHTML += `
+    <div class="product-card">
       <div class="image-container">
         <img src="${dessert.image.desktop}" alt="${dessert.name}" class="product-image" />
-
-      
-      <div class="button-container">
-        <button class="add-to-cart-btn" data-name="${dessert.name}" data-price="${dessert.price}">
-          <img src="./assets/images/icon-add-to-cart.svg" alt="Add to Cart">Add to Cart
-        </button>
-
-<div class="quantity-selector" style="display: none;">
-          <button class="decrease-btn"><img src="./assets/images/icon-decrement-quantity.svg" alt="Decrease" /></button>
-          <span class="quantity">1</span>
-          <button class="increase-btn"><img src="./assets/images/icon-increment-quantity.svg" alt="Increase" /></button>
+        <div class="button-container">
+          <button class="add-to-cart-btn" data-name="${dessert.name}">
+            <img src="./assets/images/icon-add-to-cart.svg" alt="">Add to Cart
+          </button>
+          <div class="quantity-selector" style="display: none;">
+            <button class="decrease-btn"><img src="./assets/images/icon-decrement-quantity.svg" alt="Decrease" /></button>
+            <span class="quantity">1</span>
+            <button class="increase-btn"><img src="./assets/images/icon-increment-quantity.svg" alt="Increase" /></button>
+          </div>
         </div>
-      </div>
       </div>
       <div class="product-info">
         <p class="category">${dessert.category}</p>
         <h3 class="name">${dessert.name}</h3>
-        <p class="description">${dessert.description}</p>
         <p class="price">$${dessert.price.toFixed(2)}</p>
       </div>
     </div>
   `;
-    productGrid.innerHTML += cardHTML;
   });
 }
 
-const productGrid = document.getElementById("product-grid");
-
-productGrid.addEventListener("click", (event) => {
+document.getElementById("product-grid").addEventListener("click", (event) => {
   const target = event.target;
 
-  const addToCartBtn = target.closest(".add-to-cart-btn");
-  if (addToCartBtn) {
-    const productName = addToCartBtn.dataset.name;
-    addToCart(productName);
-  }
-  const incrementBtn = target.closest(".increase-btn");
-  if (incrementBtn) {
-    const productName = incrementBtn.closest(".product-card").querySelector(".name").innerText;
-    upadteQuantity(productName, 1);
-  }
-  const decrementBtn = target.closest(".decrease-btn");
-  if (decrementBtn) {
-    const productName = decrementBtn.closest(".product-card").querySelector(".name").innerText;
-    upadteQuantity(productName, -1);
-  }
-});
+  const addBtn = target.closest(".add-to-cart-btn");
+  if (addBtn) return addToCart(addBtn.dataset.name);
 
-function upadteQuantity(productName, change) {
-  const cartItem = cart.find((item) => item.name === productName);
-  if (cartItem > -1) {
-    cartItem.quantity += change;
-    if (cartItem.quantity <= 0) {
-      cart.splice(cartItem, 1);
-      resetButtonState(productName);
-    }
-    renderCart();
-    updateCardQuantity(productName);
-  }
-}
+  const card = target.closest(".product-card");
+  if (!card) return;
+  const name = card.querySelector(".name").innerText;
 
-function updateCardQuantity(productName) {
-  const cards = document.querySelectorAll(".product-card");
-  cards.forEach((card) => {
-    const name = card.querySelector(".name").innerText;
-    if (name === productName) {
-      const item = cart.find((item) => item.name === productName);
-      card.querySelector(".quantity").innerText = item.quantity;
-    }
-  });
-}
-
-function resetButtonState(productName) {
-  const cards = document.querySelectorAll(".product-card");
-  cards.forEach((card) => {
-    const name = card.querySelector(".name").innerText;
-    if (name === productName) {
-      card.querySelector(".add-to-cart-btn").style.display = "flex";
-      card.querySelector(".quantity-selector").style.display = "none";
-      card.querySelector(".product-image").style.border = "none";
-    }
-  });
-}
-
-
-
-    const productPrice = parseFloat(addToCartBtn.dataset.price);
-    addToCart(productName, productPrice);
-  }
+  if (target.closest(".increase-btn")) updateQuantity(name, 1);
+  else if (target.closest(".decrease-btn")) updateQuantity(name, -1);
 });
 
 function addToCart(productName) {
   const product = allDesserts.find((dessert) => dessert.name === productName);
   if (!cart.find((item) => item.name === productName)) {
     cart.push({ ...product, quantity: 1 });
-    updateButtonState(productName);
+    updateButtonState(productName, true);
     renderCart();
   }
 }
 
-function updateButtonState(productName) {
+function updateQuantity(productName, change) {
+  const itemIndex = cart.findIndex((item) => item.name === productName);
+  if (itemIndex > -1) {
+    cart[itemIndex].quantity += change;
+    if (cart[itemIndex].quantity <= 0) {
+      cart.splice(itemIndex, 1);
+      updateButtonState(productName, false);
+    }
+    renderCart();
+    updateCardQuantity(productName);
+  }
+}
+
+window.removeFromCart = function (productName) {
+  const cartItemIndex = cart.findIndex((item) => item.name === productName);
+  if (cartItemIndex > -1) {
+    cart.splice(cartItemIndex, 1);
+    updateButtonState(productName, false);
+    renderCart();
+  }
+};
+
+function updateButtonState(productName, isAdded) {
   const cards = document.querySelectorAll(".product-card");
   cards.forEach((card) => {
-    const name = card.querySelector(".name").innerText;
-    if (name === productName) {
-      card.querySelector(".add-to-cart-btn").style.display = "none";
-      card.querySelector(".quantity-selector").style.display = "flex";
+    if (card.querySelector(".name").innerText === productName) {
+      card.querySelector(".add-to-cart-btn").style.display = isAdded
+        ? "none"
+        : "flex";
+      card.querySelector(".quantity-selector").style.display = isAdded
+        ? "flex"
+        : "none";
       card.querySelector(".product-image").style.border =
         "2px solid hsl(14, 86%, 42%)";
+      if (isAdded) card.querySelector(".quantity").innerText = "1";
     }
   });
+}
+
+function updateCardQuantity(productName) {
+  const item = cart.find((item) => item.name === productName);
+  if (item) {
+    const cards = document.querySelectorAll(".product-card");
+    cards.forEach((card) => {
+      if (card.querySelector(".name").innerText === productName) {
+        card.querySelector(".quantity").innerText = item.quantity;
+      }
+    });
+  }
 }
 
 function renderCart() {
@@ -142,11 +124,8 @@ function renderCart() {
     cartEmpty.style.display = "none";
     cartItemsContainer.style.display = "block";
 
-    const totalPrice = cart.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0,
-    );
-    cartTotal.innerText = `Your Cart (${totalPrice})`;
+    const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartTotal.innerText = `Your Cart (${totalQty})`;
 
     cartItemsContainer.innerHTML =
       cart
