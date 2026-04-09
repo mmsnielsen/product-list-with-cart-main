@@ -49,10 +49,24 @@ function displayDesserts(desserts) {
 const productGrid = document.getElementById("product-grid");
 
 productGrid.addEventListener("click", (event) => {
-  const addToCartBtn = event.target.closest(".add-to-cart-btn");
+  const target = event.target;
 
+  const addToCartBtn = target.closest(".add-to-cart-btn");
   if (addToCartBtn) {
     const productName = addToCartBtn.dataset.name;
+    addToCart(productName);
+  }
+  const incrementBtn = target.closest(".increase-btn");
+  if (incrementBtn) {
+    const productName = incrementBtn.closest(".product-card").querySelector(".name").innerText;
+    upadteQuantity(productName, 1);
+  }
+  const decrementBtn = target.closest(".decrease-btn");
+  if (decrementBtn) {
+    const productName = decrementBtn.closest(".product-card").querySelector(".name").innerText;
+    upadteQuantity(productName, -1);
+  }
+});
     const productPrice = parseFloat(addToCartBtn.dataset.price);
     addToCart(productName, productPrice);
   }
