@@ -80,4 +80,57 @@ function updateButtonState(productName) {
   });
 }
 
+function renderCart() {
+  const cartEmpty = document.getElementById("cart-empty");
+  const cartItemsContainer = document.getElementById("cart-items");
+  const cartTotal = document.querySelector(".cart-content h2");
+
+  if (cart.length > 0) {
+    cartEmpty.style.display = "none";
+    cartItemsContainer.style.display = "block";
+
+    const totalPrice = cart.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    );
+    cartTotal.innerText = `Your Cart (${totalPrice})`;
+
+    cartItemsContainer.innerHTML =
+      cart
+        .map(
+          (item) => `
+      <div class="cart-item">
+       <div class="cart-item-info">
+          <p class="cart-item-name">${item.name}</p>
+          <div class="cart-item-details">
+            <span class="item-qty">${item.quantity}x</span>
+            <span class="item-price">@ $${item.price.toFixed(2)}</span>
+            <span class="item-total">$${(item.price * item.quantity).toFixed(2)}</span>
+          </div>
+        </div>
+        <button class="remove-item" onclick="removeFromCart('${item.name}')">
+          <img src="./assets/images/icon-remove-item.svg" alt="Remove" />
+        </button>
+      </div>
+    `,
+        )
+        .join("") +
+      `
+      <div class="cart-total">
+        <span>Order Total</span>
+        <span class="total-price">$${cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)}</span>
+      </div>
+      <div class="carbon-neutral">
+        <img src="./assets/images/icon-carbon-neutral.svg" alt="" />
+        <p>This is a <strong>carbon-neutral</strong> delivery</p>
+      </div>
+      <button class="confirm-btn">Confirm Order</button>
+    `;
+  } else {
+    cartEmpty.style.display = "flex";
+    cartItemsContainer.style.display = "none";
+    cartTotal.innerText = "Your Cart (0)";
+  }
+}
+
 getDesserts();
