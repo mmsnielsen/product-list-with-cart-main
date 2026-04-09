@@ -67,6 +67,45 @@ productGrid.addEventListener("click", (event) => {
     upadteQuantity(productName, -1);
   }
 });
+
+function upadteQuantity(productName, change) {
+  const cartItem = cart.find((item) => item.name === productName);
+  if (cartItem > -1) {
+    cartItem.quantity += change;
+    if (cartItem.quantity <= 0) {
+      cart.splice(cartItem, 1);
+      resetButtonState(productName);
+    }
+    renderCart();
+    updateCardQuantity(productName);
+  }
+}
+
+function updateCardQuantity(productName) {
+  const cards = document.querySelectorAll(".product-card");
+  cards.forEach((card) => {
+    const name = card.querySelector(".name").innerText;
+    if (name === productName) {
+      const item = cart.find((item) => item.name === productName);
+      card.querySelector(".quantity").innerText = item.quantity;
+    }
+  });
+}
+
+function resetButtonState(productName) {
+  const cards = document.querySelectorAll(".product-card");
+  cards.forEach((card) => {
+    const name = card.querySelector(".name").innerText;
+    if (name === productName) {
+      card.querySelector(".add-to-cart-btn").style.display = "flex";
+      card.querySelector(".quantity-selector").style.display = "none";
+      card.querySelector(".product-image").style.border = "none";
+    }
+  });
+}
+
+
+
     const productPrice = parseFloat(addToCartBtn.dataset.price);
     addToCart(productName, productPrice);
   }
