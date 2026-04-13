@@ -148,16 +148,16 @@ function renderCart() {
         )
         .join("") +
       `
-      <div class="cart-total">
-        <span>Order Total</span>
-        <span class="total-price">$${cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)}</span>
-      </div>
-      <div class="carbon-neutral">
-        <img src="./assets/images/icon-carbon-neutral.svg" alt="" />
-        <p>This is a <strong>carbon-neutral</strong> delivery</p>
-      </div>
-      <button class="confirm-btn">Confirm Order</button>
-    `;
+  <div class="cart-total">
+  <span>Order Total</span>
+  <span class="total-price">$${cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)}</span>
+  </div>
+  <div class="carbon-neutral">
+  <img src="./assets/images/icon-carbon-neutral.svg" alt="" />
+  <p>This is a <strong>carbon-neutral</strong> delivery</p>
+  </div>
+  <button class="confirm-btn">Confirm Order</button>
+  `;
   } else {
     cartEmpty.style.display = "flex";
     cartItemsContainer.style.display = "none";
@@ -166,3 +166,73 @@ function renderCart() {
 }
 
 getDesserts();
+
+document.addEventListener("click", (event) => {
+  if (
+    event.target.classList.contains("confirm-btn") &&
+    !event.target.closest(".modal-content")
+  ) {
+    showModal();
+  }
+  if (event.target.id === "new-order-btn") {
+    resetOrder();
+  }
+});
+
+function showModal() {
+  const modal = document.getElementById("confirmation-modal");
+  const summary = document.getElementById("order-summary");
+
+  const summaryHTML =
+    cart
+      .map(
+        (item) => `
+    <div class="summary-item">
+    <div class="summary-item-left">
+    <img src="${item.image.thumbnail}" alt="" />
+    <div class="summary-details">
+      <p class="summary-name">${item.name}</p>
+      <span class="item-qty">${item.quantity}x</span>
+      <span class="item-price">@ $${item.price.toFixed(2)}</span>
+    </div>
+    </div>
+    <span class="summary-total">$${(item.price * item.quantity).toFixed(2)}</span>
+    </div>
+  `,
+      )
+      .join("") +
+    `
+  <div class="cart-total">
+    <span>Order Total</span>
+    <span class="total-price">$${cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)}</span>
+  </div>
+  `;
+
+  summary.innerHTML = summaryHTML;
+  modal.style.display = "flex";
+  window.scrollTo(0, 0);
+  document.body.style.overflow = "hidden";
+}
+
+function resetOrder() {
+  cart = [];
+  document.getElementById("confirmation-modal").style.display = "none";
+  allDesserts.forEach((dessert) => updateButtonState(dessert.name, false));
+  renderCart();
+  document.body.style.overflow = "auto";
+}
+document.addEventListener("click", (event) => {
+  if (
+    event.target.id === "new-order-btn" ||
+    event.target.closest("#new-order-btn")
+  ) {
+    resetOrder();
+  }
+
+  if (
+    event.target.classList.contains("confirm-btn") &&
+    !event.target.closest(".modal-content")
+  ) {
+    showModal();
+  }
+});
