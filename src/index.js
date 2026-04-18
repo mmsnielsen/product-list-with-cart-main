@@ -96,8 +96,9 @@ function updateButtonState(productName, isAdded) {
       card.querySelector(".quantity-selector").style.display = isAdded
         ? "flex"
         : "none";
-      card.querySelector(".product-image").style.border =
-        "2px solid hsl(14, 86%, 42%)";
+      card.querySelector(".product-image").style.border = isAdded
+        ? "2px solid hsl(14, 86%, 42%)"
+        : "none";
       if (isAdded) card.querySelector(".quantity").innerText = "1";
     }
   });
@@ -167,21 +168,10 @@ function renderCart() {
 
 getDesserts();
 
-document.addEventListener("click", (event) => {
-  if (
-    event.target.classList.contains("confirm-btn") &&
-    !event.target.closest(".modal-content")
-  ) {
-    showModal();
-  }
-  if (event.target.id === "new-order-btn") {
-    resetOrder();
-  }
-});
-
 function showModal() {
   const modal = document.getElementById("confirmation-modal");
   const summary = document.getElementById("order-summary");
+  const newOrderBtn = document.getElementById("new-order-btn");
 
   const summaryHTML =
     cart
@@ -210,8 +200,9 @@ function showModal() {
 
   summary.innerHTML = summaryHTML;
   modal.style.display = "flex";
-  window.scrollTo(0, 0);
   document.body.style.overflow = "hidden";
+  window.scrollTo(0, 0);
+  newOrderBtn.focus();
 }
 
 function resetOrder() {

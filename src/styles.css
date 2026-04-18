@@ -254,7 +254,7 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1.5rem 0;
+  margin-top: 1.5rem;
   margin-bottom: 1.25rem;
 }
 
@@ -329,7 +329,7 @@ h3 {
 
 .modal-content h2 {
   color: hsl(14, 65%, 9%);
-  font-size: 1.25rem;
+  font-size: 2.25rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
@@ -443,7 +443,9 @@ h3 {
   }
 
   .product-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min 100%, 250px), 1fr);
+    grid-template-columns:
+      repeat auto-fit,
+      minmax(min (100%, 250px), 1fr);
     justify-content: center;
   }
 
@@ -462,5 +464,19 @@ h3 {
     position: static;
     margin-top: 2rem;
     background-color: white;
+  }
+
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border-radius: 1.5rem 1.5rem 0 0;
+    padding: 2.5rem 1.5rem;
+    max-height: 95vh;
   }
 }
